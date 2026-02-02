@@ -7,26 +7,24 @@ import { errorLogger } from './middleware/errorlog.js'
 const app = express()
 
 const PORT = 3000
-app.use(bodyParser.urlencoded({ extended: false }))
-
-
-app.get('/', (req,res) => {
-res.status(200).json({
- msg: "backend is working"
-})
-})
 
 app.use(
   cors({
-    origin: [
-      'http://localhost:5173',
-      'https://tilios.vercel.app/'
-    ],
+    origin: ['http://localhost:5173', 'https://tilios.vercel.app'],
     credentials: true,
     allowedHeaders: ['Content-Type'],
     methods: ['GET', 'POST', 'PUT', 'DELETE']
   })
 )
+
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    msg: 'backend is working'
+  })
+})
+
 setupDB()
 app.use('/api', router)
 app.use(errorLogger)
