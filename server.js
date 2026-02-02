@@ -15,6 +15,7 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173',
+      'https://tilios.vercel.app/'
     ],
     credentials: true,
     allowedHeaders: ['Content-Type'],
