@@ -10,6 +10,11 @@ const PORT = 3000
 app.use(bodyParser.urlencoded({ extended: false }))
 
 
+app.get('/', (req,res) => {
+res.status(200).json({
+  "backend is working"
+})
+})
 
 app.use(
   cors({
