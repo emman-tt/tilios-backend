@@ -8,6 +8,8 @@ const app = express()
 
 const PORT = 3000
 
+app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(
   cors({
     origin: ['http://localhost:5173', 'https://tilios.vercel.app'],
@@ -16,8 +18,6 @@ app.use(
     methods: ['GET', 'POST', 'PUT', 'DELETE']
   })
 )
-
-app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/', (req, res) => {
   res.status(200).json({

@@ -10,12 +10,17 @@ import {
 import { uploadProduct } from '../controller/upload.js'
 import { fetchProducts } from '../controller/product.js'
 import { userLogin, userSignUp } from '../controller/auth.js'
+import { adminLogin, adminSignup } from '../controller/admin/admin-auth.js'
 // Product Routes
 router.get('/products', fetchProducts)
 
-// Auth Routes
+//User Auth Routes
 router.post('/login', userLogin)
-router.post('/signup', userSignUp)
+router.post('/register', userSignUp)
+
+// Admin Auth Routes
+router.post('/admin-login', adminLogin)
+router.post('/admin-register', adminSignup)
 
 // Cart Routes
 router.get('/cart', fetchCart)

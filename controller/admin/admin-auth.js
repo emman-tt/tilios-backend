@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs'
-import { User } from '../database/user.js'
-import { generateTokens } from '../services/jwtService.js'
-export async function userLogin (req, res, next) {
+import { User } from '../../database/user.js'
+import { generateTokens } from '../../services/jwtService.js'
+export async function adminLogin (req, res, next) {
   try {
     const { email, password } = req.body
     if (!email || !password) {
@@ -14,7 +14,7 @@ export async function userLogin (req, res, next) {
     const foundUser = await User.findOne({
       where: {
         email: email,
-        role: 'user'
+        role: 'admin'
       }
     })
 
@@ -47,19 +47,17 @@ export async function userLogin (req, res, next) {
 
     res.status(200).json({
       status: 'success',
-      message: 'User logged in successfully',
+      message: 'Admin logged in successfully',
       accessToken: accessToken
     })
   } catch (error) {
     next(error)
   }
 }
-
-export async function userSignUp (req, res, next) {
+export async function adminSignup (req, res, next) {
   try {
-    const { email, username, password } = req.body
-
-    if (!email || !username || !password) {
+    const { email, password, username } = req.body
+    if (!email || !password || !username) {
       return res.status(400).json({
         status: 'failed',
         message: 'Some required fields are missing'
@@ -69,28 +67,29 @@ export async function userSignUp (req, res, next) {
     const foundUser = await User.findOne({
       where: {
         email: email,
-        role: 'user'
+        role: 'admin'
       }
     })
 
     if (foundUser) {
       return res.status(400).json({
         status: 'failed',
-        message: 'User already exists, Please Log in'
+        message: 'Admin already exists , please login'
       })
     }
 
     const hashedPassword = await bcrypt.hash(password, 12)
+
     await User.create({
       name: username,
       email: email,
       password: hashedPassword,
-      role: 'user'
+      role: 'admin'
     })
 
     res.status(201).json({
       status: 'success',
-      message: 'user created successfully'
+      message: 'Admin created successfully'
     })
   } catch (error) {
     next(error)

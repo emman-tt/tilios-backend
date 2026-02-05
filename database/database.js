@@ -33,22 +33,8 @@ Product.belongsTo(Category, {
 })
 export async function setupDB () {
   try {
-    // await Category.bulkCreate([
-    //   {
-    //     name: 'Ceramic'
-    //   },
-    //   {
-    //     name: 'Porcelain'
-    //   },
-    //   {
-    //     name: 'Stone'
-    //   },
-    //   {
-    //     name: 'Glass'
-    //   }
-    // ])
     // await sequelize.sync({alter:true})
-    await sequelize.sync()
+    // await sequelize.sync()
   } catch (error) {
     console.log('database error', error.message)
   }
