@@ -30,6 +30,4 @@ export async function generateTokens (email, role) {
   })
 
   return { accessToken, refreshToken }
-
- 
 }

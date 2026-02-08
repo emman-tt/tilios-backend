@@ -23,6 +23,11 @@ export const Product = sequelize.define('product', {
   stock: {
     type: DataTypes.INTEGER,
     defaultValue: 10,
-    allowNull:false
+    allowNull: false
+  },
+  discount: {
+    type: DataTypes.DOUBLE,
+    defaultValue: 0,
+    allowNull: false
   }
 })

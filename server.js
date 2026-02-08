@@ -4,20 +4,23 @@ import bodyParser from 'body-parser'
 import router from './routes/route.js'
 import { setupDB } from './database/database.js'
 import { errorLogger } from './middleware/errorlog.js'
+import cookieParser from 'cookie-parser'
 const app = express()
 
 const PORT = 3000
 
-app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: false }))
 app.use(
   cors({
     origin: ['http://localhost:5173', 'https://tilios.vercel.app'],
     credentials: true,
-    allowedHeaders: ['Content-Type'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   })
 )
+
+app.use(cookieParser())
+app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.get('/', (req, res) => {
   res.status(200).json({
