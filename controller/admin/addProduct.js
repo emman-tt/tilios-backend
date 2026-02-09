@@ -1,0 +1,36 @@
+import { Product } from '../../database/products.js'
+import { Sales } from '../../database/sales.js'
+export async function addProduct (req, res, next) {
+  try {
+    const { title, stock, price, category, discount, image } = req.body
+
+    const newProduct = await Product.create(
+      {
+        name: title,
+        stock: parseInt(stock),
+        amount: parseFloat(price),
+        categoryId: parseInt(category),
+        discount: parseFloat(discount),
+        image,
+        saleProducts: {
+          sold_units: 0
+        }
+      },
+      {
+        include: [
+          {
+            as: 'saleProducts',
+            model: Sales
+          }
+        ]
+      }
+    )
+
+    res.status(201).json({
+      status: 'success',
+      message: 'Product added successfully'
+    })
+  } catch (error) {
+    next(error)
+  }
+}

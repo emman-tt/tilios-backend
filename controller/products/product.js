@@ -1,4 +1,4 @@
-import { Product } from '../database/products.js'
+import { Product } from '../../database/products.js'
 export async function fetchProducts (req, res, next) {
   try {
     const limit = req.query.limit || 12

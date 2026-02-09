@@ -1,4 +1,4 @@
-import { Product } from "../database/products.js"
+import { Product } from "../../database/products.js"
 export async function uploadProduct (req, res, next) {
   try {
     if (!req.file) {

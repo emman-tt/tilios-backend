@@ -1,26 +1,17 @@
 import { Product } from '../../database/products.js'
-import { User } from '../../database/user.js'
 import { Sales } from '../../database/sales.js'
+import { Op } from 'sequelize'
 export async function GetAllProducts (req, res, next) {
   try {
-    const decoded = req.user
-    const userId = decoded.sub
     const page = parseInt(req.query.page) || 1
-    const limit = 10
+    const limit = parseInt(req.query.limit) || 10
     const offset = (page - 1) * limit
+    const categoryId = parseInt(req.query.category)
 
-    const userCheck = User.findOne({
-      where: {
-        id: userId,
-        role: 'admin'
-      }
-    })
+    const whereClause = {}
 
-    if (!userCheck) {
-      return res.status(401).json({
-        status: 'failed',
-        message: 'Unauthorized admin'
-      })
+    if (categoryId !== 0) {
+      whereClause.categoryId = categoryId
     }
 
     const { count, rows } = await Product.findAndCountAll({
@@ -30,7 +21,8 @@ export async function GetAllProducts (req, res, next) {
         model: Sales,
         as: 'saleProducts',
         attributes: ['sold_units']
-      }
+      },
+      where: whereClause
     })
 
     if (!rows || rows.length === 0) {

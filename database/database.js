@@ -5,6 +5,8 @@ import { Cart } from './cart.js'
 import { sequelize } from '../config/sql.js'
 import { CartProduct } from './cartProduct.js'
 import { Sales } from './sales.js'
+import { Order } from './orders.js'
+import { OrderItem } from './orderItems.js'
 
 User.hasOne(Cart, {
   onDelete: 'CASCADE',
@@ -25,6 +27,28 @@ Product.belongsToMany(Cart, {
   foreignKey: 'productId',
   otherKey: 'cartId'
 })
+
+User.hasOne(Order, {
+  foreignKey: 'userId',
+  onDelete: 'CASCADE'
+})
+
+Order.belongsTo(User, {
+  foreignKey: 'userId'
+})
+
+Order.belongsToMany(Product, {
+  foreignKey: 'orderId',
+  otherKey: 'productId',
+  through: OrderItem
+})
+
+Product.belongsToMany(Order, {
+  foreignKey: 'productId',
+  otherKey: 'orderId',
+  through: OrderItem
+})
+
 Category.hasMany(Product, {
   foreignKey: 'categoryId'
 })
@@ -39,23 +63,12 @@ Product.hasOne(Sales, {
   as: 'saleProducts'
 })
 
-Sales.belongsTo(Sales, {
+Sales.belongsTo(Product, {
   foreignKey: 'productId'
 })
 
 export async function setupDB () {
   try {
-    // await sequelize.sync()
-    // const discounts = []
-    // for (let i = 1; i <= 24; i++) {
-    //   discounts.push({
-    //     productId: i,
-    //     sold_units: Math.floor(Math.random() * 100) + 1
-    //     // createdAt: new Date(),
-    //     // updatedAt: new Date()
-    //   })
-    // }
-    // await Sales.bulkCreate(fakeSales)
     // await sequelize.sync({ alter: true })
   } catch (error) {
     console.log('database error', error.message)

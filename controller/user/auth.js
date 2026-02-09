@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
-import { User } from '../database/user.js'
-import { generateTokens } from '../services/jwtService.js'
+import { User } from '../../database/user.js'
+import { generateTokens } from '../../services/jwtService.js'
 export async function userLogin (req, res, next) {
   try {
     const { email, password } = req.body

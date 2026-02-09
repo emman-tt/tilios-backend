@@ -15,7 +15,6 @@ export function authenticateToken (req, res, next) {
     }
 
     jwt.verify(accessToken, process.env.ACCESS_SECRET, (err, decoded) => {
-      console.log(process.env.ACCESS_SECRET)
       if (err) {
         return res.status(403).json({
           status: 'failed',
