@@ -69,7 +69,7 @@ Sales.belongsTo(Product, {
 
 export async function setupDB () {
   try {
-    // await sequelize.sync({ alter: true })
+    // await sequelize.sync({ alter: true })   
   } catch (error) {
     console.log('database error', error.message)
   }

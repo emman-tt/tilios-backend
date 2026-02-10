@@ -43,7 +43,7 @@ export function refreshAuth (req, res, next) {
 
     jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, decoded) => {
       if (err) {
-        return res.status(403).json({
+        return res.status(405).json({
           status: 'failed',
           message: 'Invalid or expired refresh token ,please log in'
         })

@@ -12,8 +12,8 @@ export const CartProduct = sequelize.define('cartProduct', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  amount: {
-    type: DataTypes.INTEGER,
+  priceAtSale: {
+    type: DataTypes.DOUBLE,
     allowNull: false
   }
 })
