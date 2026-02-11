@@ -20,11 +20,12 @@ export async function fetchCart (req, res, next) {
     }
 
     const item = await cart.getProducts()
-    const products = item[0].dataValues
+    const products = item.map(item => item.dataValues)
+    // console.log(products)
     return res.status(201).json({
       status: 'success',
       message: 'Cart fetched successfully',
-      products: [products]
+      products: products
     })
   } catch (error) {
     next(error)

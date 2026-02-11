@@ -22,6 +22,11 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
+
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
+
 app.get('/', (req, res) => {
   res.status(200).json({
     msg: 'backend is working'
