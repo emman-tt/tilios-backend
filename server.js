@@ -24,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 
 app.get('/ping', (req, res) => {
+  console.log('web alive')
   res.status(200).send('pong');
 });
 
