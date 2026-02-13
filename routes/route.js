@@ -57,6 +57,8 @@ router.post('/cart/:id', authenticateToken, addCart)
 router.put('/cart', authenticateToken, updateCart)
 router.delete('/cart', authenticateToken, deleteCart)
 
+
+router.post('/order', authenticateToken)
 // upload Routes
 router.post('/upload', upload.single('image'), uploadProduct)
 

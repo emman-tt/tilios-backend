@@ -7,7 +7,7 @@ import { errorLogger } from './middleware/errorlog.js'
 import cookieParser from 'cookie-parser'
 const app = express()
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 
 app.get('/ping', (req, res) => {
   console.log('web alive')
@@ -26,8 +26,6 @@ app.use(
 app.use(cookieParser())
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-
-
 
 app.get('/', (req, res) => {
   res.status(200).json({

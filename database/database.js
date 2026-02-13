@@ -7,6 +7,7 @@ import { CartProduct } from './cartProduct.js'
 import { Sales } from './sales.js'
 import { Order } from './orders.js'
 import { OrderItem } from './orderItems.js'
+import { Transaction } from './transactions.js'
 
 User.hasOne(Cart, {
   onDelete: 'CASCADE',
@@ -49,6 +50,14 @@ Product.belongsToMany(Order, {
   through: OrderItem
 })
 
+Order.hasMany(Transaction, {
+  foreignKey: 'orderId'
+})
+
+Transaction.belongsTo(Order, {
+  foreignKey: 'orderId'
+})
+
 Category.hasMany(Product, {
   foreignKey: 'categoryId'
 })
@@ -69,7 +78,7 @@ Sales.belongsTo(Product, {
 
 export async function setupDB () {
   try {
-    // await sequelize.sync({ alter: true })   
+    // await sequelize.sync({ alter: true })  
   } catch (error) {
     console.log('database error', error.message)
   }

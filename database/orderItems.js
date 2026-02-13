@@ -8,20 +8,28 @@ export const OrderItem = sequelize.define('orderItem', {
     autoIncrement: true,
     primaryKey: true
   },
-  quantity: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
   status: {
     type: DataTypes.STRING,
     allowNull: false
+    //order status - pending, paid, shipped, delivered(success)
+    //             -pending,failed,cancelled
   },
   reference: {
     type: DataTypes.STRING,
     allowNull: false
   },
-  priceAtSale: {
+  totalAmount: {
     type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  shippingAddress: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  details: {
+    type: DataTypes.JSONB,
     allowNull: false
   }
 })
+
+

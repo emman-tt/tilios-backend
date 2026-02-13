@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize'
-import { sequelize } from '../config/sql'
+import { sequelize } from '../config/sql.js'
 
 export const Transaction = sequelize.define('transaction', {
   id: {
@@ -7,5 +7,22 @@ export const Transaction = sequelize.define('transaction', {
     primaryKey: true,
     allowNull: false,
     autoIncrement: true
+  },
+  status: {
+    type: DataTypes.STRING,
+    allowNull: false
+    //transaction status - failed / success
+  },
+  paymentMethod: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  providerReference: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  amount: {
+    type: DataTypes.FLOAT,
+    allowNull: false
   }
 })

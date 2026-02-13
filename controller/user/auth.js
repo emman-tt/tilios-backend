@@ -11,9 +11,12 @@ export async function userLogin (req, res, next) {
       })
     }
 
+    const Email = email.trim().toLowerCase()
+    const Password = password.trim()
+
     const foundUser = await User.findOne({
       where: {
-        email: email,
+        email: Email,
         role: 'user'
       }
     })
@@ -27,7 +30,7 @@ export async function userLogin (req, res, next) {
 
     const foundPassoword = foundUser?.dataValues.password
 
-    const checker = await bcrypt.compare(password, foundPassoword)
+    const checker = await bcrypt.compare(Password, foundPassoword)
 
     if (!checker) {
       return res.status(401).json({
@@ -36,7 +39,7 @@ export async function userLogin (req, res, next) {
       })
     }
 
-    const { accessToken, refreshToken } = await generateTokens(email, 'user')
+    const { accessToken, refreshToken } = await generateTokens(Email, 'user')
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -66,9 +69,12 @@ export async function userSignUp (req, res, next) {
       })
     }
 
+    const Email = email.trim().toLowerCase()
+    const Password = password.trim()
+
     const foundUser = await User.findOne({
       where: {
-        email: email,
+        email: Email,
         role: 'user'
       }
     })
@@ -80,10 +86,10 @@ export async function userSignUp (req, res, next) {
       })
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12)
+    const hashedPassword = await bcrypt.hash(Password, 12)
     await User.create({
       name: username,
-      email: email,
+      email: Email,
       password: hashedPassword,
       role: 'user'
     })
