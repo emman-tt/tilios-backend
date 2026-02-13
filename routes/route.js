@@ -20,6 +20,7 @@ import {
   deleteCart,
   updateCart
 } from '../controller/cart/cart.js'
+import { silentUserAuth } from '../controller/user/silent-auth.js'
 
 // Refresh Routes
 router.post('/auth/refresh', refreshAuth)
@@ -30,10 +31,13 @@ router.get('/products', fetchProducts)
 //User Auth Routes
 router.post('/login', userLogin)
 router.post('/register', userSignUp)
+router.get('/silent/user-auth', authenticateToken, silentUserAuth)
 
 // Admin Auth Routes
 router.post('/admin-login', adminLogin)
 router.post('/admin-register', adminSignup)
+router.get('/silent/admin-auth', authenticateToken)
+
 
 //Dashboard Routes
 router.get('/admin/products', authenticateToken, adminOnly, GetAllProducts)
@@ -56,7 +60,6 @@ router.get('/cart', authenticateToken, fetchCart)
 router.post('/cart/:id', authenticateToken, addCart)
 router.put('/cart', authenticateToken, updateCart)
 router.delete('/cart', authenticateToken, deleteCart)
-
 
 router.post('/order', authenticateToken)
 // upload Routes

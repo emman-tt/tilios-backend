@@ -39,7 +39,7 @@ export async function adminLogin (req, res, next) {
       })
     }
 
-    const { accessToken, refreshToken } = await generateTokens(Email, 'user')
+    const { accessToken, refreshToken } = await generateTokens(Email, 'admin')
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
