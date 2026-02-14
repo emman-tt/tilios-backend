@@ -17,7 +17,7 @@ export async function userLogin (req, res, next) {
     const foundUser = await User.findOne({
       where: {
         email: Email,
-        role: 'user' 
+        role: 'user'
       }
     })
 

@@ -2,6 +2,7 @@ import { Product } from '../../database/products.js'
 import { User } from '../../database/user.js'
 import { Cart } from '../../database/cart.js'
 import { CartProduct } from '../../database/cartProduct.js'
+
 export async function fetchCart (req, res, next) {
   try {
     const decoded = req.user
@@ -25,12 +26,14 @@ export async function fetchCart (req, res, next) {
 
     const item = await cart.getProducts()
     const products = item.map(item => item.dataValues)
-    // console.log(products)
+    const orderTotal = await calculateOrderTotal(cartId)
+
     return res.status(201).json({
       status: 'success',
       message: 'Cart fetched successfully',
       products: products,
-      cartTotal: cartTotal
+      cartTotal: cartTotal,
+      orderTotal: orderTotal
     })
   } catch (error) {
     next(error)
@@ -67,15 +70,17 @@ export async function addCart (req, res, next) {
     const priceAtSale = (amount - discountValue).toFixed(2)
     // console.log(priceAtSale)
 
+    const total = quantity * priceAtSale
+
     await cart.addProduct(foundProduct, {
       through: {
         quantity: quantity,
-        priceAtSale: priceAtSale
+        priceAtSale: priceAtSale,
+        total: total
       }
     })
 
     const cartId = cart.id
-    // console.log(cartId)
 
     const cartTotal = await countCartTotal(cartId)
 
@@ -91,8 +96,9 @@ export async function addCart (req, res, next) {
 
 export async function deleteCart (req, res, next) {
   try {
-    const { productId } = req.body
+    const { id } = req.params
 
+    const productId = parseInt(id)
     const decoded = req.user
     const userId = decoded.sub
     const cart = await Cart.findOne({
@@ -104,14 +110,16 @@ export async function deleteCart (req, res, next) {
     const item = await CartProduct.findOne({
       where: {
         cartId: cart.id,
-        productId: parseInt(productId)
+        productId: productId
       }
     })
     await item.destroy()
+    const orderTotal = await calculateOrderTotal(cart.id)
 
     res.status(201).json({
       status: 'success',
-      message: 'Product deleted succefully'
+      message: 'Product deleted succefully',
+      orderTotal: orderTotal
     })
   } catch (error) {
     next(error)
@@ -126,11 +134,19 @@ export async function updateCart (req, res, next) {
     const cart = await user.getCart()
     const product = await Product.findByPk(Number(productId))
 
-    const item = await cart.getProducts({
+    const cartProduct = await CartProduct.findOne({
       where: {
-        id: product.id
+        productId: productId
       }
     })
+
+    if (!cartProduct) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Item not found in cart'
+      })
+    }
+    const priceAtSale = cartProduct.dataValues.priceAtSale
 
     if (type === 'increase') {
       const [affectedCount] = await CartProduct.increment('quantity', {
@@ -141,9 +157,21 @@ export async function updateCart (req, res, next) {
         }
       })
 
-      if (affectedCount === 0) {
-        return res.status(404).json({ message: 'Item not found in cart' })
-      }
+      const newQuantity = affectedCount[0][0].quantity
+
+      const newTotal = priceAtSale * newQuantity
+
+      await CartProduct.update(
+        {
+          total: newTotal.toFixed(2)
+        },
+        {
+          where: {
+            cartId: cart.id,
+            productId: productId
+          }
+        }
+      )
     }
 
     if (type === 'decrease') {
@@ -166,18 +194,42 @@ export async function updateCart (req, res, next) {
         }
       })
 
-      if (affectedCount === 0) {
-        return res.status(404).json({ message: 'Item not found in cart' })
-      }
+      const newQuantity = affectedCount[0][0].quantity
+
+      const newTotal = priceAtSale * newQuantity
+
+      await CartProduct.update(
+        {
+          total: newTotal.toFixed(2)
+        },
+        {
+          where: {
+            cartId: cart.id,
+            productId: productId
+          }
+        }
+      )
     }
 
+    const orderTotal = await calculateOrderTotal(cart.id)
     return res.status(201).json({
       status: 'success',
-      message: 'Working'
+      message: 'Product updated successfully',
+      orderTotal: orderTotal
     })
   } catch (error) {
     next(error)
   }
+}
+
+async function calculateOrderTotal (Id) {
+  const orderTotal = await CartProduct.sum('total', {
+    where: {
+      cartId: Id
+    }
+  })
+
+  return (orderTotal + 0.0).toFixed(2)
 }
 
 async function countCartTotal (Id) {
@@ -187,5 +239,5 @@ async function countCartTotal (Id) {
     }
   })
 
-  return total
+  return total.toFixed(2)
 }

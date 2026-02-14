@@ -13,7 +13,8 @@
     "nodemon": "^3.1.11",
     "pg": "^8.18.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "stripe": "^20.3.1"
   },
   "overrides": {
     "cloudinary": "$cloudinary"

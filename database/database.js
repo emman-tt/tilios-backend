@@ -29,6 +29,9 @@ Product.belongsToMany(Cart, {
   otherKey: 'cartId'
 })
 
+CartProduct.belongsTo(Product, { foreignKey: 'productId' })
+Product.hasMany(CartProduct, { foreignKey: 'productId' })
+
 User.hasOne(Order, {
   foreignKey: 'userId',
   onDelete: 'CASCADE'

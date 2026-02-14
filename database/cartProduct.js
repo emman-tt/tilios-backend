@@ -15,5 +15,10 @@ export const CartProduct = sequelize.define('cartProduct', {
   priceAtSale: {
     type: DataTypes.DOUBLE,
     allowNull: false
+  },
+  total: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+    defaultValue: 0
   }
 })

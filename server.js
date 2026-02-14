@@ -5,6 +5,7 @@ import router from './routes/route.js'
 import { setupDB } from './database/database.js'
 import { errorLogger } from './middleware/errorlog.js'
 import cookieParser from 'cookie-parser'
+
 const app = express()
 
 const PORT = process.env.PORT || 3000
