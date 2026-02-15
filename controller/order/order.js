@@ -34,7 +34,7 @@ export async function createOrder (req, res, next) {
     }
 
     const orderTotal = await calculateOrderTotal(cart.id)
-    const reference = `TIL-${uuidv4()}`
+    const reference = `TIL-${uuidv4().split('-')[0].toUpperCase()}`
 
     const cartproducts = await CartProduct.findAll({
       where: {
@@ -68,17 +68,18 @@ export async function createOrder (req, res, next) {
     })
 
     const order = latestOrder[0]
-
     if (order) {
-      req.details = {
-        allDetails,
-        orderId: order.id
-      }
+      await order.update({
+        totalAmount: orderTotal,
+        shippingAddress: address,
+        product_details: allDetails
+      })
 
+      req.details = { allDetails, orderId: order.id }
       return next()
     }
 
-    await user.createOrder({
+    const newOrder = await user.createOrder({
       status: 'pending',
       totalAmount: orderTotal,
       shippingAddress: address,
@@ -89,7 +90,7 @@ export async function createOrder (req, res, next) {
 
     req.details = {
       allDetails,
-      orderId: order.id
+      orderId: newOrder.id
     }
     return next()
   } catch (error) {
@@ -124,11 +125,17 @@ export async function updateOrder (session) {
     const user = await User.findByPk(parseInt(userId))
     const cart = await user.getCart()
 
-    await Transaction.create({
-      paymentMethod: 'Stripe',
-      paymentReference: session.id,
-      amount: session.amount_total / 100
-    })
+    await Transaction.create(
+      {
+        orderId: orderId,
+        paymentMethod: 'Stripe',
+        providerReference: session.id,
+        amount: session.amount_total / 100
+      },
+      {
+        transaction: t
+      }
+    )
 
     await CartProduct.destroy(
       { where: { cartId: cart.id } },

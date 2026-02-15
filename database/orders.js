@@ -32,7 +32,7 @@ export const Order = sequelize.define('order', {
   stripeSessionId: {
     type: DataTypes.STRING,
     allowNull: true,
-    unique: true, 
+    // unique: true,
     comment: 'The unique ID from Stripe Checkout'
   }
 })
