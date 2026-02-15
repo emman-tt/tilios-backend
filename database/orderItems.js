@@ -12,7 +12,6 @@ export const OrderItem = sequelize.define('orderItem', {
     type: DataTypes.STRING,
     allowNull: false
     //order status - pending, paid, shipped, delivered(success)
-    //             -pending,failed,cancelled
   },
   reference: {
     type: DataTypes.STRING,
@@ -26,10 +25,8 @@ export const OrderItem = sequelize.define('orderItem', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  details: {
+  product_details: {
     type: DataTypes.JSONB,
     allowNull: false
   }
 })
-
-

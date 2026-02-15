@@ -6,7 +6,6 @@ import { sequelize } from '../config/sql.js'
 import { CartProduct } from './cartProduct.js'
 import { Sales } from './sales.js'
 import { Order } from './orders.js'
-import { OrderItem } from './orderItems.js'
 import { Transaction } from './transactions.js'
 
 User.hasOne(Cart, {
@@ -32,25 +31,13 @@ Product.belongsToMany(Cart, {
 CartProduct.belongsTo(Product, { foreignKey: 'productId' })
 Product.hasMany(CartProduct, { foreignKey: 'productId' })
 
-User.hasOne(Order, {
+User.hasMany(Order, {
   foreignKey: 'userId',
   onDelete: 'CASCADE'
 })
 
 Order.belongsTo(User, {
   foreignKey: 'userId'
-})
-
-Order.belongsToMany(Product, {
-  foreignKey: 'orderId',
-  otherKey: 'productId',
-  through: OrderItem
-})
-
-Product.belongsToMany(Order, {
-  foreignKey: 'productId',
-  otherKey: 'orderId',
-  through: OrderItem
 })
 
 Order.hasMany(Transaction, {
@@ -81,7 +68,7 @@ Sales.belongsTo(Product, {
 
 export async function setupDB () {
   try {
-    // await sequelize.sync({ alter: true })  
+    // await sequelize.sync({ alter: true }) 
   } catch (error) {
     console.log('database error', error.message)
   }

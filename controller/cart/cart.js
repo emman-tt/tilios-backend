@@ -238,6 +238,9 @@ async function countCartTotal (Id) {
       cartId: Id
     }
   })
+  if (!total) {
+    return 0
+  }
 
   return total.toFixed(2)
 }

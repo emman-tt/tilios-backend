@@ -8,11 +8,6 @@ export const Transaction = sequelize.define('transaction', {
     allowNull: false,
     autoIncrement: true
   },
-  status: {
-    type: DataTypes.STRING,
-    allowNull: false
-    //transaction status - failed / success
-  },
   paymentMethod: {
     type: DataTypes.STRING,
     allowNull: false

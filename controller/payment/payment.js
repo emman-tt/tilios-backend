@@ -1,4 +1,5 @@
 import { CartProduct } from '../../database/cartProduct.js'
+import { Order } from '../../database/orders.js'
 import { Product } from '../../database/products.js'
 import { User } from '../../database/user.js'
 import { stripe } from '../../services/stripe.js'
@@ -7,57 +8,51 @@ export async function handlePayments (req, res, next) {
   try {
     const decoded = req.user
     const userId = decoded.sub
+    const { allDetails, orderId } = req.details
 
-    const user = await User.findByPk(userId)
-    const cart = await user.getCart()
-
-    if (!cart) {
-      return res.status(404).json({
-        status: 'failed',
-        message: 'no items in cart/ cart doesnt exist'
-      })
-    }
-
-    // const cartProduct = await CartProduct.findAll({
-    //   where: {
-    //     cartId: cart.id
-    //   }
-    // })
-
-    const cartItems = await CartProduct.findAll({
-      where: { cartId: cart.id },
-      include: [{ model: Product, attributes: ['name', 'image'] }]
-    })
-    cartItems.map(item => console.log(item.dataValues.product.name))
-
-    const line_items = cartItems.map(item => {
+    const line_items = allDetails.map(item => {
       return {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: item.product.dataValues.name,
-            images: [item.product.dataValues.image]
+            name: item.product_name,
+            images: [item.product_image]
           },
           unit_amount: Math.round(item.priceAtSale * 100)
         },
-        quantity: item.quantity
+        quantity: item.product_quantity
       }
     })
+    // console.log(line_items)
 
-    const session = stripe.checkout.sessions.create({
+    const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: line_items,
       mode: 'payment',
+      metadata: {
+        orderId: orderId.toString(),
+        userId: userId.toString()
+      },
       success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.FRONTEND_URL}/cart`
     })
-    console.log(line_items)
+
+    await Order.update(
+      {
+        stripeSessionId: session.id
+      },
+      {
+        where: {
+          id: orderId
+        }
+      }
+    )
 
     res.status(200).json({
       status: 'success',
-      url: (await session).url
+      url: session.url
     })
   } catch (error) {
-    next(error)
+    return next(error)
   }
 }

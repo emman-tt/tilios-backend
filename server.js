@@ -5,10 +5,48 @@ import router from './routes/route.js'
 import { setupDB } from './database/database.js'
 import { errorLogger } from './middleware/errorlog.js'
 import cookieParser from 'cookie-parser'
-
+import { updateOrder } from './controller/order/order.js'
+import { stripe } from './services/stripe.js'
 const app = express()
 
 const PORT = process.env.PORT || 3000
+
+app.post(
+  '/webhook',
+  express.raw({ type: 'application/json' }),
+  async (req, res) => {
+    const sig = req.headers['stripe-signature']
+    let event
+
+    try {
+      event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        process.env.STRIPE_WEBHOOK_SECRET
+      )
+    } catch (err) {
+      console.error(`Signature Verification Failed: ${err.message}`)
+      return res.status(400).send(`Webhook Error: ${err.message}`)
+    }
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object
+
+      try {
+        // Call your helper
+        await updateOrder(session)
+        
+        // ALWAYS tell Stripe you got it!
+        return res.status(200).json({ received: true })
+      } catch (error) {
+        console.error('Order Update Failed:', error)
+        return res.status(500).send('Internal Server Error')
+      }
+    }
+
+    res.json({ received: true })
+  }
+)
 
 app.get('/ping', (req, res) => {
   console.log('web alive')
