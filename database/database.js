@@ -32,8 +32,7 @@ CartProduct.belongsTo(Product, { foreignKey: 'productId' })
 Product.hasMany(CartProduct, { foreignKey: 'productId' })
 
 User.hasMany(Order, {
-  foreignKey: 'userId',
-  onDelete: 'CASCADE'
+  foreignKey: 'userId'
 })
 
 Order.belongsTo(User, {

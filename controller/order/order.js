@@ -144,6 +144,43 @@ export async function updateOrder (session) {
   })
 }
 
+export async function confirmOrder (req, res, next) {
+  try {
+    const { sessionId } = req.params
+    const decoded = req.user
+    const userId = decoded.sub
+    const order = await Order.findOne({
+      include: [
+        {
+          model: User,
+          attributes: ['name', 'email']
+        }
+      ],
+      where: {
+        stripeSessionId: sessionId
+      }
+    })
+
+    if (!order) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'Transaction was unsuccessfull or unpaid'
+      })
+    }
+
+    const details = await order.dataValues
+
+    console.log(details)
+    return res.status(201).json({
+      status: 'success',
+      message: 'Transaction was succesful',
+      details: details
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 async function calculateOrderTotal (Id) {
   const orderTotal = await CartProduct.sum('total', {
     where: {

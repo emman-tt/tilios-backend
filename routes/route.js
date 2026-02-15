@@ -22,11 +22,11 @@ import {
 } from '../controller/cart/cart.js'
 import { silentUserAuth } from '../controller/user/silent-auth.js'
 import { handlePayments } from '../controller/payment/payment.js'
-import {  createOrder } from '../controller/order/order.js'
+import { confirmOrder, createOrder } from '../controller/order/order.js'
 
 //Stripe/Payments/Order Routes
 router.post('/order/session', authenticateToken, createOrder, handlePayments)
-router.get('/order/status/:sessionId', authenticateToken)
+router.get('/order/status/:sessionId', authenticateToken, confirmOrder)
 
 //  Neutral Routes
 router.post('/auth/refresh', refreshAuth)
