@@ -12,9 +12,3 @@ export const errorLogger = (err, req, res, next) => {
   })
 }
 
-// if error in all middlewares set the error message and status code
-// if (!product) {
-//       const error = new Error("Product not found");
-//       error.statusCode = 404; // You set this manually
-//       throw error;
-//     }

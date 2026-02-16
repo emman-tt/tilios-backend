@@ -23,6 +23,7 @@ import {
 import { silentUserAuth } from '../controller/user/silent-auth.js'
 import { handlePayments } from '../controller/payment/payment.js'
 import { confirmOrder, createOrder } from '../controller/order/order.js'
+import { adminCheck } from '../controller/admin/admin-check.js'
 
 //Stripe/Payments/Order Routes
 router.post('/order/session', authenticateToken, createOrder, handlePayments)
@@ -42,7 +43,7 @@ router.post('/register', userSignUp)
 // Admin Auth Routes
 router.post('/admin-login', adminLogin)
 router.post('/admin-register', adminSignup)
-router.get('/silent/admin-auth', authenticateToken)
+router.get('/admin/check', authenticateToken,adminOnly, adminCheck)
 
 //Dashboard Routes
 router.get('/admin/products', authenticateToken, adminOnly, GetAllProducts)
