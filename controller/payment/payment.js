@@ -34,7 +34,7 @@ export async function handlePayments (req, res, next) {
         userId: userId.toString()
       },
       success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.FRONTEND_URL}/cart`
+      cancel_url: `${process.env.FRONTEND_URL}`
     })
 
     await Order.update(

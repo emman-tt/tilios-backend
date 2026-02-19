@@ -19,6 +19,7 @@ app.post(
     let event
 
     try {
+      // console.log('Signature:', sig)
       event = stripe.webhooks.constructEvent(
         req.body,
         sig,
@@ -34,8 +35,9 @@ app.post(
 
       try {
         // Call your helper
+
         await updateOrder(session)
-        
+
         // ALWAYS tell Stripe you got it!
         return res.status(200).json({ received: true })
       } catch (error) {
@@ -64,7 +66,7 @@ app.use(
 
 app.use(cookieParser())
 app.use(express.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: false }))
 
 app.get('/', (req, res) => {
   res.status(200).json({

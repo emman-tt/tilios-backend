@@ -24,6 +24,10 @@ import { silentUserAuth } from '../controller/user/silent-auth.js'
 import { handlePayments } from '../controller/payment/payment.js'
 import { confirmOrder, createOrder } from '../controller/order/order.js'
 import { adminCheck } from '../controller/admin/admin-check.js'
+import {
+  confirmPayment,
+  GetAllOrders
+} from '../controller/admin/admin-orders.js'
 
 //Stripe/Payments/Order Routes
 router.post('/order/session', authenticateToken, createOrder, handlePayments)
@@ -43,7 +47,7 @@ router.post('/register', userSignUp)
 // Admin Auth Routes
 router.post('/admin-login', adminLogin)
 router.post('/admin-register', adminSignup)
-router.get('/admin/check', authenticateToken,adminOnly, adminCheck)
+router.get('/admin/check', authenticateToken, adminOnly, adminCheck)
 
 //Dashboard Routes
 router.get('/admin/products', authenticateToken, adminOnly, GetAllProducts)
@@ -60,6 +64,13 @@ router.delete(
   adminOnly,
   deleteProduct
 )
+router.get('/admin/orders', authenticateToken, adminOnly, GetAllOrders)
+router.put(
+  '/admin/confirm/payment/:id',
+  authenticateToken,
+  adminOnly,
+  confirmPayment
+)
 
 // Cart Routes
 router.get('/cart', authenticateToken, fetchCart)
@@ -67,7 +78,6 @@ router.post('/cart/:id', authenticateToken, addCart)
 router.put('/cart', authenticateToken, updateCart)
 router.delete('/cart/:id', authenticateToken, deleteCart)
 
-router.post('/order', authenticateToken)
 // upload Routes
 router.post('/upload', upload.single('image'), uploadProduct)
 

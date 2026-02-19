@@ -62,7 +62,7 @@ export async function createOrder (req, res, next) {
     })
 
     const latestOrder = await user.getOrders({
-      where: { status: 'pending' },
+      where: { order_status: 'pending' },
       order: [['createdAt', 'DESC']],
       limit: 1
     })
@@ -80,7 +80,8 @@ export async function createOrder (req, res, next) {
     }
 
     const newOrder = await user.createOrder({
-      status: 'pending',
+      payment_status: 'pending',
+      order_status: 'pending',
       totalAmount: orderTotal,
       shippingAddress: address,
       product_details: allDetails,
@@ -112,7 +113,7 @@ export async function updateOrder (session) {
     await Order.update(
       {
         stripeSessionId: session.id,
-        status: 'paid'
+        order_status: 'dispatched'
       },
       {
         where: {
@@ -170,7 +171,7 @@ export async function confirmOrder (req, res, next) {
 
     const details = await order.dataValues
 
-    console.log(details)
+    // console.log(details)
     return res.status(201).json({
       status: 'success',
       message: 'Transaction was succesful',

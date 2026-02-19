@@ -8,10 +8,21 @@ export const Order = sequelize.define('order', {
     autoIncrement: true,
     primaryKey: true
   },
-  status: {
+  //this is now for the transaction if it exists its paid else unpaid
+  // status: {
+  //   type: DataTypes.STRING,
+  //   allowNull: false
+  //   //order status - pending, paid, unpaid
+  // },
+  payment_status: {
     type: DataTypes.STRING,
     allowNull: false
-    //order status - pending, paid, shipped, delivered(success)
+    // status - confirmed, pending ,cancelled
+  },
+  order_status: {
+    type: DataTypes.STRING,
+    allowNull: false
+    // status - pending, dispatched, delivered ,cancelled
   },
   reference: {
     type: DataTypes.STRING,

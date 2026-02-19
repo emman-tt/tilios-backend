@@ -4,14 +4,22 @@ export async function adminCheck (req, res, next) {
   try {
     const decoded = req.user
     const userId = decoded.sub
-    const user = await User.findOne({
+  
+    const admin = await User.findOne({
       where: {
         id: userId,
         role: 'admin'
       }
     })
 
-    const username = user.dataValues.name
+    if (!admin) {
+      return res.status(401).json({
+        status: 'failed',
+        message: 'Not an admin'
+      })
+    }
+
+    const username = admin.dataValues.name
     return res.status(201).json({
       status: 'success',
       message: 'Admin verified',
