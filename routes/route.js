@@ -28,6 +28,7 @@ import {
   confirmPayment,
   GetAllOrders
 } from '../controller/admin/admin-orders.js'
+import { getCustomers } from '../controller/admin/admin-customers.js'
 
 //Stripe/Payments/Order Routes
 router.post('/order/session', authenticateToken, createOrder, handlePayments)
@@ -71,6 +72,7 @@ router.put(
   adminOnly,
   confirmPayment
 )
+router.get('/admin/customers', authenticateToken, adminOnly, getCustomers)
 
 // Cart Routes
 router.get('/cart', authenticateToken, fetchCart)
