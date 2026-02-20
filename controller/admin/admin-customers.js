@@ -1,3 +1,4 @@
+import { sequelize } from '../../config/sql.js'
 import { Order } from '../../database/orders.js'
 import { Transaction } from '../../database/transactions.js'
 import { User } from '../../database/user.js'
@@ -10,17 +11,18 @@ export async function getCustomers (req, res, next) {
     // // console.log(filter)
     const whereClause = {}
 
-    const { count, rows } = await Order.findAndCountAll({
-      //   limit,
-      //   offset,
-      where: whereClause,
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: ['name', 'email']
-        }
-      ]
+    const { count, rows } = await User.findAndCountAll({
+      attributes: {
+        include: [
+          [
+            sequelize.literal(
+              `(SELECT COUNT(*) FROM "orders" WHERE "orders"."userId" = "user"."id")`
+            ),
+            'totalOrders'
+          ]
+        ],
+        exclude: ['password', 'role']
+      }
     })
 
     if (!rows || rows.length === 0) {

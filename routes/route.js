@@ -29,6 +29,7 @@ import {
   GetAllOrders
 } from '../controller/admin/admin-orders.js'
 import { getCustomers } from '../controller/admin/admin-customers.js'
+import { getOverview } from '../controller/admin/admin-overview.js'
 
 //Stripe/Payments/Order Routes
 router.post('/order/session', authenticateToken, createOrder, handlePayments)
@@ -51,6 +52,7 @@ router.post('/admin-register', adminSignup)
 router.get('/admin/check', authenticateToken, adminOnly, adminCheck)
 
 //Dashboard Routes
+router.get('/admin/overview', authenticateToken, adminOnly, getOverview)
 router.get('/admin/products', authenticateToken, adminOnly, GetAllProducts)
 router.post('/admin/add-product', authenticateToken, adminOnly, addProduct)
 router.put(

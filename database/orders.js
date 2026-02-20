@@ -22,7 +22,7 @@ export const Order = sequelize.define('order', {
   order_status: {
     type: DataTypes.STRING,
     allowNull: false
-    // status - pending, dispatched, delivered ,cancelled
+    // status - pending, dispatched, delivered ,refunded
   },
   reference: {
     type: DataTypes.STRING,
