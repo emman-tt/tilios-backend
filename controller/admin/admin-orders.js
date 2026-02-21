@@ -53,6 +53,35 @@ export async function GetAllOrders (req, res, next) {
   }
 }
 
+export async function confirmDeliveredStatus (req, res, next) {
+  try {
+    const { id } = req.params
+    const order = await Order.findOne({
+      where: {
+        reference: id
+      }
+    })
+
+    if (!order) {
+      return res.status(404).json({
+        status: 'failed',
+        message: 'product not found'
+      })
+    }
+
+    await order.update({
+      order_status: 'delivered'
+    })
+
+    return res.status(201).json({
+      status: 'success',
+      message: 'order status updated successfully'
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export async function confirmPayment (req, res, next) {
   try {
     const { id } = req.params

@@ -34,11 +34,11 @@ app.post(
       const session = event.data.object
 
       try {
-        // Call your helper
+      
 
         await updateOrder(session)
 
-        // ALWAYS tell Stripe you got it!
+  
         return res.status(200).json({ received: true })
       } catch (error) {
         console.error('Order Update Failed:', error)

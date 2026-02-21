@@ -1,9 +1,15 @@
 import { Product } from '../../database/products.js'
 import { Sales } from '../../database/sales.js'
+
 export async function addProduct (req, res, next) {
   try {
-    const { title, stock, price, category, discount, image } = req.body
+    const { title, stock, price, category, discount } = req.body
 
+    if (!req.file) {
+      return res.status(400).json({ error: 'Image upload failed' })
+    }
+
+    const imagePath = req.file.path
     const newProduct = await Product.create(
       {
         name: title,
@@ -11,7 +17,7 @@ export async function addProduct (req, res, next) {
         amount: parseFloat(price),
         categoryId: parseInt(category),
         discount: parseFloat(discount),
-        image,
+        image: imagePath,
         saleProducts: {
           sold_units: 0
         }

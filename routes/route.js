@@ -25,6 +25,7 @@ import { handlePayments } from '../controller/payment/payment.js'
 import { confirmOrder, createOrder } from '../controller/order/order.js'
 import { adminCheck } from '../controller/admin/admin-check.js'
 import {
+  confirmDeliveredStatus,
   confirmPayment,
   GetAllOrders
 } from '../controller/admin/admin-orders.js'
@@ -54,7 +55,7 @@ router.get('/admin/check', authenticateToken, adminOnly, adminCheck)
 //Dashboard Routes
 router.get('/admin/overview', authenticateToken, adminOnly, getOverview)
 router.get('/admin/products', authenticateToken, adminOnly, GetAllProducts)
-router.post('/admin/add-product', authenticateToken, adminOnly, addProduct)
+router.post('/admin/add-product', authenticateToken, adminOnly,upload.single('image'), addProduct)
 router.put(
   '/admin/update-product/:id',
   authenticateToken,
@@ -68,6 +69,12 @@ router.delete(
   deleteProduct
 )
 router.get('/admin/orders', authenticateToken, adminOnly, GetAllOrders)
+router.put(
+  '/admin/orders/:id',
+  authenticateToken,
+  adminOnly,
+  confirmDeliveredStatus
+)
 router.put(
   '/admin/confirm/payment/:id',
   authenticateToken,
