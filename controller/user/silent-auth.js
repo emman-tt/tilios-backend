@@ -13,7 +13,6 @@ export async function silentUserAuth (req, res, next) {
       }
     })
    
-
     res.status(201).json({
       status: 'success',
       message: 'user session still active',
