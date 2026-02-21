@@ -12,7 +12,7 @@ export async function userLogin (req, res, next) {
     }
 
     const Email = email.trim().toLowerCase()
-    const Password = password.trim()
+    const Password = password
 
     const foundUser = await User.findOne({
       where: {
@@ -70,7 +70,7 @@ export async function userSignUp (req, res, next) {
     }
 
     const Email = email.trim().toLowerCase()
-    const Password = password.trim()
+    const Password = password
 
     const foundUser = await User.findOne({
       where: {
