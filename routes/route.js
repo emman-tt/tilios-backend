@@ -31,7 +31,7 @@ import {
 } from '../controller/admin/admin-orders.js'
 import { getCustomers } from '../controller/admin/admin-customers.js'
 import { getOverview } from '../controller/admin/admin-overview.js'
-
+import { isMeMiddleware } from '../middleware/only-me.js'
 //Stripe/Payments/Order Routes
 router.post('/order/session', authenticateToken, createOrder, handlePayments)
 router.get('/order/status/:sessionId', authenticateToken, confirmOrder)
@@ -55,17 +55,26 @@ router.get('/admin/check', authenticateToken, adminOnly, adminCheck)
 //Dashboard Routes
 router.get('/admin/overview', authenticateToken, adminOnly, getOverview)
 router.get('/admin/products', authenticateToken, adminOnly, GetAllProducts)
-router.post('/admin/add-product', authenticateToken, adminOnly,upload.single('image'), addProduct)
+router.post(
+  '/admin/add-product',
+  authenticateToken,
+  adminOnly,
+  upload.single('image'),
+  isMeMiddleware,
+  addProduct
+)
 router.put(
   '/admin/update-product/:id',
   authenticateToken,
   adminOnly,
+  isMeMiddleware,
   updateProduct
 )
 router.delete(
   '/admin/delete-product/:id',
   authenticateToken,
   adminOnly,
+  isMeMiddleware,
   deleteProduct
 )
 router.get('/admin/orders', authenticateToken, adminOnly, GetAllOrders)
@@ -73,12 +82,14 @@ router.put(
   '/admin/orders/:id',
   authenticateToken,
   adminOnly,
+  isMeMiddleware,
   confirmDeliveredStatus
 )
 router.put(
   '/admin/confirm/payment/:id',
   authenticateToken,
   adminOnly,
+  isMeMiddleware,
   confirmPayment
 )
 router.get('/admin/customers', authenticateToken, adminOnly, getCustomers)

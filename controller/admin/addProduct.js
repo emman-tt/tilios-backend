@@ -1,8 +1,13 @@
 import { Product } from '../../database/products.js'
 import { Sales } from '../../database/sales.js'
+import { User } from '../../database/user.js'
+
+
 
 export async function addProduct (req, res, next) {
   try {
+
+
     const { title, stock, price, category, discount } = req.body
 
     if (!req.file) {
